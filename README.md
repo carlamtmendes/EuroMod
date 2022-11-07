@@ -106,14 +106,11 @@ Hourly results are saved into a CSV for the following categories
 
 ##### Generation
 
-![generation](https://github.ic.ac.uk/storage/user/1035/files/7945da02-36e8-4c87-aa51-bab31a64dbc4)
-
+![generation](https://user-images.githubusercontent.com/117671960/200371905-42e592c1-2193-4257-b45d-1afed4d05dee.png)
 
 ##### Electricity prices
 
-![prices](https://github.ic.ac.uk/storage/user/1035/files/cd2195c9-61a2-4f1f-a355-ae4df09d734f)
-
-
+![prices](https://user-images.githubusercontent.com/117671960/200371947-74b0d00c-016f-43bd-bd39-be13263271c8.png)
 
 ## What's new
 
