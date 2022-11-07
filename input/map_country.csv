@@ -1,0 +1,75 @@
+,node_id,country,country_sym,EU
+0,AL00,Albania,AL,No
+1,AT00,Austria,AT,Yes
+2,BA00,Bosnia and Hertz,BA,No
+3,BE00,Belgium,BE,Yes
+4,BG00,Bulgaria,BG,Yes
+5,CH00,Switzerland,CH,Yes
+6,CY00,Cyprus,CY,No
+7,CZ00,Czech Republic,CZ,Yes
+8,DE00,Germany,DE,Yes
+9,DEKF,Germany,DE,Yes
+10,DKE1,Denmark ,DK,Yes
+11,DKKF,Denmark ,DK,Yes
+12,DKW1,Denmark ,DK,Yes
+13,EE00,Estonia,EE,Yes
+14,ES00,Spain,ES,Yes
+15,FI00,Finland,FI,Yes
+16,FR00,France,FR,Yes
+17,FR15,Corsica,FR,Yes
+18,GR00,Greece,GR,Yes
+19,GR03,Crete,GR,Yes
+20,HR00,Croatia,HR,Yes
+21,HU00,Hungary,HU,Yes
+22,IE00,Ireland,IE,Yes
+23,IL00,Isreal,IL,No
+24,IS00,Iceland,IS,No
+25,ITCN,Italy,IT,Yes
+26,ITCO,Italy,IT,Yes
+27,ITCS,Italy,IT,Yes
+28,ITN1,Italy,IT,Yes
+29,ITS1,Italy,IT,Yes
+30,ITSA,Italy,IT,Yes
+31,ITSI,Italy,IT,Yes
+32,LT00,Lithuania,LT,Yes
+33,LUB1,Germany,DE,Yes
+34,LUF1,Germany,DE,Yes
+35,LUG1,Germany,DE,Yes
+36,LUV1,Germany,DE,Yes
+37,LV00,Latvia,LV,Yes
+38,ME00,Montenegro,ME,No
+39,MK00,Macedonia,MK,No
+40,MT00,Malta,MT,No
+41,NL00,Netherlands,NL,Yes
+42,NOM1,Norway,NO,Yes
+43,NON1,Norway,NO,Yes
+44,NOS0,Norway,NO,Yes
+45,NOS1,Norway,NO,Yes
+46,PL00,Poland ,PL,Yes
+47,PLE0,Poland,PL,Yes
+48,PLI0,Poland,PL,Yes
+49,PT00,Portugal,PT,Yes
+50,RO00,Romania,RO,Yes
+51,RS00,Serbia,RS,No
+52,SE01,Sweden,SE,Yes
+53,SE02,Sweden,SE,Yes
+54,SE03,Sweden,SE,Yes
+55,SE04,Sweden,SE,Yes
+56,SI00,Slovenia,SI,Yes
+57,SK00,Slovakia,SK,Yes
+58,TN00,Tunisia,TN,No
+59,TR00,Turkey,TR,No
+60,UA01,Ukraine,UA,No
+61,UA02,Ukraine,UA,No
+62,UK00,Great Britain,GB,Yes
+63,UKNI,Ireland,IE,Yes
+64,RU00,Russia,RU,No
+65,NO00,Norway,NO,Yes
+66,DZ00,Algeria,DZ,No
+67,LY00,Libya,LY,No
+68,AZ00,Azerbaijan,AZ,No
+69,TM00,Turkmenistan,TM,No
+70,DK00,Denmark ,DK,Yes
+71,IT00,Italy,IT,Yes
+72,LU00,Germany,DE,Yes
+73,SE00,Sweden,SE,Yes
