@@ -18,7 +18,7 @@ The model is subject to a set of technical constraints related to demand and sup
 
 Markets are not assumed to be competitive by proposing two enhancements to the total system cost function: 
 
-  1. to allow generators to bid or to sell electricity at prices which deviate from their SRMC, and 
+  1. to allow generators to bid or to sell electricity at prices which deviate from their marginal cost, and 
 
   2. to apply a linear transformation on the resulting modelled prices so that they better reflect the volatility of prices seen in real power markets.
 
