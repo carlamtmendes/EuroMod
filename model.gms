@@ -96,8 +96,9 @@ LIM_Storlevel(t,p)$SUM((n,map_ptech(p,hydrotech)),hydro_storagecap(n,p))..
 
 DEF_Storlevel(t,p)$SUM((n,map_ptech(p,hydrotech)),hydro_storagecap(n,p))..
          Storlevel(t,p)
-                         =E=     Storlevel(t--1,p)
+                         =E=     Storlevel(t-1,p)
                                  +  0.75 * PUMP(t,p)$SUM(n,SUM(map_ptech(p,hydrotech)$(not sameas(hydrotech,'Dam')),hydro_pumpcap(n,p)))
+                                 +  SUM(tfirst,hydro_storagelvl_firsthour(tfirst,p))$(ord(t) eq 1)
                                  -  TURB(t,p)
                                  +  SUM(map_np(n,p),SUM(map_ptech(p,hydrotech), inflow(t,n,hydrotech)))                                
                                  -  SPILL(t,p)
@@ -139,3 +140,8 @@ $if %module_chp%=="yes"           LIM_qchp
 
 Euromod.optfile  = 0;
 Euromod.dictfile = 0;
+
+*###############################################################################
+*@                       VARIABLE FIXING AND BOUNDS
+*###############################################################################
+$IF %scenario%=="Historic"                  Storlevel.LO(tlast,p)$(hydro_storagelvl_lasthour(tlast,p) AND NOT map_ptech(p,'PSClosed')) = hydro_storagelvl_lasthour(tlast,p);
