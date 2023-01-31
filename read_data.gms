@@ -26,7 +26,7 @@ $batInclude symRead Parameter windon              (time,n)                      
 $batInclude symRead Parameter windoff             (time,n)                                                 'wind offshore infeed'      wind_off.csv                                         1            2..lastCol
 $batInclude symRead Parameter otherRES            (time,n)                                                 'other res infeed'          other_res.csv                                        1            2..lastCol
 $batInclude symRead Parameter ror                 (time,n)                                                 'RoR infeed'                hydro_ror.csv                                        1            2..lastCol
-$batInclude symRead Parameter chp_entsoe          (n,year)                                                 'chp ENTSOE demand'         chp_entsoe.csv                                       2            3..lastCol
+$batInclude symRead Parameter chp_demand          (n,year)                                                 'chp ENTSOE demand'         chp_demand.csv                                       2            3..lastCol
 $batInclude symRead Parameter water_inflow        (n,week,*)                                               'water inflows'             inflows_weekly.csv                                   2..3         4..lastCol
 $batInclude symRead Parameter fuel_price_up       (time,year,*)                                            'fuel prices'               fuel_prices.csv                                      2,3          4..lastCol
 $batInclude symRead Parameter initial_storage     (n,year,week,*)                                          'initial storage levels'    initial_storage.csv                                  1..3         4..lastCol
@@ -35,8 +35,7 @@ $batInclude symRead Parameter initial_stor_ratio  (n,week,*)                    
 $batInclude symRead Parameter ntc                 (scen,year,l,n,nn)                                       'ntc'                       ntc_%runyear%.csv                                    1,2,4..6     7..lastCol
 $batInclude symRead Parameter plant_con           (p,scen,year,n,tech,fuel,is_chp,*)                       'plant upload data'         capacities_block_%runyear%.csv                       14,2,3,5..8  9..13
 $batInclude symRead Parameter chp_profile         (t)                                                      'chp hourly profile'        chp_profile.csv                                      2            3..lastCol
-$batInclude symRead Parameter avail               (tech,month)                                             'availabilities'            availabilities.csv                                   2            3..lastCol
-$batInclude symRead Parameter avail_swissmob      (year,n,tech,month)                                      'availabilities'            avail_swissmob_agg.csv                               1..3         4..lastCol
+$batInclude symRead Parameter avail               (n,tech,month)                                           'availabilities'            availabilities.csv                                   1,2          3..lastCol
 $batInclude symRead Parameter cap_stor            (n,tech)                                                 'storage hydro capacity'    capacities_storage_hydro.csv                         5,6          7
 $batInclude symRead Parameter cap_pump            (n,tech)                                                 'storage hydro capacity'    capacities_pump.csv                                  5,6          7
 
@@ -186,15 +185,8 @@ ntc_loss(nn,n)$ntc_line(n,nn) = 0.001;
 
 availablity(n,tech,month) = 1;
 
-* Availabilities from SwissMod (Lig and Nuc are based per country. Others are based on general numbers)
-availablity(n,tech,month) = SUM(year, avail_swissmob(year,n,tech,month));
-availablity(n,tech,month)$(availablity(n,tech,month) eq 0) = SUM(year, avail_swissmob(year,'CH',tech,month));
-
-* Availabilities from ENTSOE data - Iain
-availablity(n,'Gas',month) = avail('Gas',month);
-availablity(n,'Coal',month) = avail('Coal',month);
-availablity(n,'Oil',month) = avail('Oil',month);
-availablity(n,'Biomass',month) = avail('Biomass',month);
+availablity(n,tech,month) = avail(n,tech,month);
+availablity(n,tech,month)$(availablity(n,tech,month) eq 0) = availablity('CH',tech,month);
 
 * Availabilities for Hydro
 availablity(n,'PSOpen',month) = 1;
@@ -283,7 +275,7 @@ q_max(t,p)$(q_max(t,p) gt max_cap(t,p))    =   max_cap(t,p);
 
 ** NOTE: Historic data from Eurostat.
 
-chp_energy_year(n,year) = chp_entsoe(n,year);
+chp_energy_year(n,year) = chp_demand(n,year);
 
 * calculate total capacity per country and technology that can provide CHP
 q_max_tot(p,n)  =   SUM((tech,fuel,is_chp)$map_pchp(p), plant_con(p,"%scenario%","%runyear%",n,tech,fuel,is_chp,'MW'));

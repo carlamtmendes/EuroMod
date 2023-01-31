@@ -9,7 +9,7 @@ $if not set report_prefix       $setglobal      report_prefix "report"
 *-----------------------------------------------------------------------*
 
 *-----------------------------------------------------------------------*
-*                               Sets                                    *
+*                               Scalars                                 *
 *-----------------------------------------------------------------------*
 
 Scalar
@@ -25,10 +25,10 @@ Scalar
 Sets
 
 ****sets for reporting*************************************************
-        item_rep                                        Items are mainly for reporting but must be defined here
-                             /"Error: CheckSum!","CO2 tonnes",Price, Margin, MarginHydro,LostLoad,LostGeneration,Demand,Supply,PumpDemand,Curtailment,NetImport,Intercept, Slope, Biomass, Coal, Hydro, Gas, Oil, Other, Dam, PSClosed, PSOpen, PSP, RoR, Solar, WindOn, Nuclear, WindOff, Lignite, AT, BE, BG, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IT, LT, LV, NL, NO, PL, PT, RO, SE, SI, SK/
+        item_rep                                        Items for reporting are mainly for creating the results.csv file
+                             /"Error: CheckSum!","CO2 tonnes",Price, LostLoad,LostGeneration,Demand,Supply,PumpDemand,Curtailment,NetImport,Intercept, Slope, Biomass, Coal, Hydro, Gas, Oil, Other, Dam, PSClosed, PSOpen, PSP, RoR, Solar, WindOn, Nuclear, WindOff, Lignite, AT, BE, BG, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IT, LT, LV, NL, NO, PL, PT, RO, SE, SI, SK/
         
-        item(item_rep)                                  Items are mainly for reporting 
+        item(item_rep)                                  Subset of items for reporting that are used in the reporting.gdx file
                              /"Error: CheckSum!","CO2 tonnes",LostLoad,LostGeneration,Demand,PumpDemand,Curtailment,NetImport,Biomass, Coal, Hydro, Gas, Oil, Other, Dam, PSClosed, PSOpen, PSP, RoR, Solar, WindOn, Nuclear, WindOff, Lignite/
 
 ****sets in model setup**************************************************
