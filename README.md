@@ -53,23 +53,31 @@ EuroMod includes several modules that cover the input, optimization, and model's
 
 - **\input**: folder containing the inputs by EuroMod in CSV format
   - *availabilities.csv*: includes power plants availabilities per type.
-  - *map_country.csv*: mapping countries to accronims used in the model.
-  - *time.csv*: definition of time steps and its relation with year, months, weeks, days and quarters.
-  - *capacities_block_2017.csv*: list of the power plants used in the model and their main characteristics.
-  - *capacities_storage_hydro.csv*: reservoir storage capacity.
+  - *capacities_block_2017.csv*: list of the power plants used in the model and their main characteristics in 2017.
+  - *capacities_block_2018.csv*: list of the power plants used in the model and their main characteristics in 2018.
+  - *capacities_block_2019.csv*: list of the power plants used in the model and their main characteristics in 2019.
+  - *capacities_block_2020.csv*: list of the power plants used in the model and their main characteristics in 2020.
   - *capacities_pump.csv*: pumping capacity for pump-storage power plants.
+  - *capacities_storage_hydro.csv*: reservoir storage capacity.
   - *chp_demand.csv*: energy demand from chp.
-  - *chp_profice.csv*: hourly chp profile.
+  - *chp_profile.csv*: hourly chp profile.
   - *fuel_prices.csv*: gas, oil, coal, uran and co2 prices time-series.
   - *generation.csv*: historic hourly generation from ENTSO-E.
+  - *hydro_ror.csv*: time-series of hourly run-of-river generation per country.
   - *inflows_weekly.csv*: water inflows per week.
-  - *ntc_2017.csv*: net transfer capacities between bidding zones.
+  - *initial_storage_ratios.csv*: hydro storage intial ratios per week and country.
+  - *initial_storage.csv*: initial hydro storage levels at beginning and end of the year.
   - *load.csv*: time-series of hourly demand per bidding zone.
-  - *hydro_ror.csv*: time-series of hourly run-of-river generation per bidding zone.
+  - *map_country.csv*: mapping countries to accronims used in the model.
+  - *ntc_2017.csv*: net transfer capacities between countries in 2017.
+  - *ntc_2018.csv*: net transfer capacities between countries in 2018.
+  - *ntc_2019.csv*: net transfer capacities between countries in 2019.
+  - *ntc_2020.csv*: net transfer capacities between countries in 2020.
+  - *other_res.csv*: time-series of hourly other renewable generation per bidding zone.
   - *solar.csv*: time-series of hourly solar PV generation per bidding zone.
   - *wind_on.csv*: time-series of hourly wind onshore generation per bidding zone.
   - *wind_off.csv*: time-series of hourly wind offshore generation per bidding zone.
-  - *other_res.csv*: time-series of hourly other renewable generation per bidding zone.
+  - *time.csv*: definition of time steps and its relation with year, months, weeks, days and quarters.
 
 - **\gdx**: folder containing all the uploaded data used by the model after calibration in the GDX format
 
