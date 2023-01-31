@@ -1,16 +1,16 @@
 # EuroMod
-Euromod a techno-economic model of the integrated European market with price granuality.
+EuroMod a techno-economic model of the integrated European market with price granuality.
 
 ## Table of Contents
 1. [About](#about)
 2. [Quick Start](#quick-start)
 3. [Documentation](#documentation)
 4. [What's new](#whats-new)
-5. [Citing EuroMod](#citing-euromod)
+5. [Citing EuroMod](#citing-euroMod)
 6. [License](#license)
 
 ## About
-Euromod is a bottom-up model of the European interconnected power system, covering 27 countries: Austria, Belgium, Bulgaria, Czech Republic, Switzerland, Germany, Denmark, Estonia, Spain, Finland, France, Great Britain, Greece, Hungary, Ireland, Italy, Lithuania, Latvia, Netherlands, Norway, Poland, Portugal, Romania, Sweden, Slovenia, and Slovakia.
+EuroMod is a bottom-up model of the European interconnected power system, covering 27 countries: Austria, Belgium, Bulgaria, Czech Republic, Switzerland, Germany, Denmark, Estonia, Spain, Finland, France, Great Britain, Greece, Hungary, Ireland, Italy, Lithuania, Latvia, Netherlands, Norway, Poland, Portugal, Romania, Sweden, Slovenia, and Slovakia.
 
 It minimizes total system costs with respect to dispatch, storage and interconnectors. For each hour of the year, demand and supply of electricity is matched and a clearing price is determined. Individual generation and storage technologies are explicitly modeled. Demand fluctuates exogenously and it is perfectly price-inelastic. It features 6 generation and 3 hydro storage technologies. Technologies such wind, solar, run-of-river and other renewables are exogenously included in the model as time-series.
 
@@ -24,12 +24,12 @@ Markets are not assumed to be competitive by proposing two enhancements to the t
 
 The resulting market-clearing price resembles the equilibrium price on European wholesale electricity markets.
 
-Euromod is written in GAMS and solved by CPLEX on a desktop computer in about 10 minutes.
+EuroMod is written in GAMS and solved by CPLEX on a desktop computer in about 10 minutes.
 
 ## Quick Start
-Euromod can run on Windows, macOS and Linux. Before installing Euromod, you should proceed to the instalation of GAMS with a valid license. GAMS is available for download from the following website: https://www.gams.com
+EuroMod can run on Windows, macOS and Linux. Before installing EuroMod, you should proceed to the instalation of GAMS with a valid license. GAMS is available for download from the following website: https://www.gams.com
 
-After downloading GAMS and Euromod, the model runs for the year 2017 by just running the file **run_model.gms**
+After downloading GAMS and EuroMod, the model runs for the year 2017 by just running the file **run_model.gms**
 
 The data files are prepared to run the years 2017, 2018, 2019, and 2020. To simulate one of those years, the user need to change the field **runyear** in the **run_model.gms** file (3rd code line).
 
@@ -40,18 +40,18 @@ $if not set t_start                     $setglobal t_start                      
 $if not set t_end                       $setglobal t_end                        8760
 $if not set runyear                     $setglobal runyear                      2017
 $if not set solver                      $setglobal solver                       CPLEX
-$if not set modelName                   $setglobal modelName                    Euromod
+$if not set modelName                   $setglobal modelName                    EuroMod
 $if not set slope                       $setglobal slope                        0.35
 $if not set scenario                    $setglobal scenario                     Historic
 ```
 After the model is solved, the model data and results are uploaded into a GDX file and a summary of the main results are saved into a CSV file.
 
 ## Documentation
-Euromod includes several modules that cover the input, optimization, and model's ouput.
+EuroMod includes several modules that cover the input, optimization, and model's ouput.
 
 ### Inputs
 
-- **\input**: folder containing the inputs by Euromod in CSV format
+- **\input**: folder containing the inputs by EuroMod in CSV format
   - *availabilities.csv*: includes power plants availabilities per type.
   - *map_country.csv*: mapping countries to accronims used in the model.
   - *time.csv*: definition of time steps and its relation with year, months, weeks, days and quarters.
@@ -85,7 +85,7 @@ Euromod includes several modules that cover the input, optimization, and model's
 
 
 ### Output
-- **\reporting**: folder containing the inputs by Euromod in CSV format
+- **\reporting**: folder containing the inputs by EuroMod in CSV format
   - **reporting_definitions.gms**: file that contains the main definition items for reporting.
   - **reporting_definitions_paramlist.gms**: list of parameters used for reporting.
   - **reporting.gms**: main file used to define all the parameters used to sumarize all main results.
