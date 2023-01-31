@@ -2,15 +2,15 @@
 Set of simple tutorials on how to change inputs in Euromod.
 
 ## Table of Contents
-[1. Define sets, parameters, variables and equations](#1-definitions)
- [1.1 How to add a new set](#11-set)
- [1.2 How to define a new country](#12-country)
- [1.3 How to define a new parameter](#13-parameter)
- [1.4 How to define a new variable or equation](#14-var)
-[2. Add power plants](#2-powerplants)
-[3. Add parameters into reporting/reporting.gms](#2-reporting)
+1. [Define sets, parameters, variables and equations](#1-definitions)
+1.1 [How to add a new set](#11-set)
+1.2 [How to define a new country](#12-country)
+1.3 [How to define a new parameter](#13-parameter)
+1.4 [How to define a new variable or equation](#14-var)
+2. [Add power plants](#2-powerplants)
+3. [Add parameters into reporting/reporting.gms](#2-reporting)
 
-## Define sets, parameters, variables and equations
+## Define sets, parameters, variables and equations(#1-definitions)
 
 In order to define sets, parameters, variables, and equations, the user needs to go to the file **definitions.gms**.
 
