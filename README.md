@@ -41,7 +41,7 @@ $if not set t_end                       $setglobal t_end                        
 $if not set runyear                     $setglobal runyear                      2017
 $if not set solver                      $setglobal solver                       CPLEX
 $if not set modelName                   $setglobal modelName                    EuroMod
-$if not set slope                       $setglobal slope                        0.35
+$if not set slope                       $setglobal slope                        0.47
 $if not set scenario                    $setglobal scenario                     Historic
 ```
 After the model is solved, the model data and results are uploaded into a GDX file and a summary of the main results are saved into a CSV file.
