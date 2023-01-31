@@ -4,7 +4,7 @@
 
 report_ntcflow_exp(t,n)   =  SUM(nn, NTCFLOW.L(t,n,nn)) + EPS;
 
-report_ntcflow_imp(t,n)   = SUM(nn, (1-ntc_loss(nn,n)) * NTCFLOW.L(t,nn, n)) + EPS;
+report_ntcflow_imp(t,n)   =  SUM(nn, (1-ntc_loss(nn,n)) * NTCFLOW.L(t,nn, n)) + EPS;
 
 report_ntcflow(t,n,nn)    = ((1-ntc_loss(nn,n)) * NTCFLOW.L(t,nn,n)) - NTCFLOW.L(t,n,nn) + EPS;
 
@@ -43,9 +43,9 @@ report_hourly(t, n, "CO2 tonnes")         = SUM(tech, report_hourly(t,n,tech) * 
 
 net_demand(t,n)         = d(t,n) - infeed(t,'Solar',n) - infeed(t,'WindOn',n) - infeed(t,'WindOff',n);
 net_demand_avg(n)       = SUM(t,net_demand(t,n)) / 8760;
-net_demand_std(n)       = sqrt(SUM(t, abs(net_demand(t,n) - net_demand_avg(n))**2)/8760);
+net_demand_std(n)       = sqrt(SUM(t, sqr(net_demand(t,n)-net_demand_avg(n)))/(8760-1));
 
-report_nodal_price_hourly(t,n) = report_nodal_price_hourly(t,n) + 6.58002177 * ((net_demand(t,n) - net_demand_avg(n))/net_demand_std(n)) + 3.0999020465050338;
+report_nodal_price_hourly(t,n) = report_nodal_price_hourly(t,n) + slope * ((net_demand(t,n) - net_demand_avg(n))/net_demand_std(n)) + intercept;
 
 
 results(t,n,item_rep) = report_hourly(t,n,item_rep);
@@ -84,4 +84,4 @@ report_statistics("Objective scaling factor") = %scale%;
 $if %increasing_costs%=="no"    Execute_unload "results/Result_GAMS_%result_file_suffix%_LP.gdx";
 $if %increasing_costs%=="yes"   Execute_unload "results/Result_GAMS_%result_file_suffix%_QCP.gdx";
 
-Execute 'gdxdump results/Result_GAMS_%result_file_suffix%_QCP.gdx format=csv output=results/results_%runyear%_slope%slope%_t%t_end%.csv symb=results cDim=y EpsOut=0 ';
+Execute 'gdxdump results/Result_GAMS_%result_file_suffix%_QCP.gdx format=csv output=results/results_%result_file_suffix%.csv symb=results cDim=y EpsOut=0 ';
