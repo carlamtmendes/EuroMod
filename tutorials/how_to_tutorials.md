@@ -3,18 +3,23 @@ Set of simple tutorials on how to change inputs in Euromod.
 
 ## Table of Contents
 1. [Define sets, parameters, variables and equations](#definitions)
-        1.1 [How to add a new set](##11-set)
-        1.2 [How to define a new country](##12-country)
-        1.3 [How to define a new parameter](##13-parameter)
-        1.4 [How to define a new variable or equation](##14-var)
-2. [Add power plants](#powerplants)
-3. [Add parameters into reporting/reporting.gms](#reporting)
+ - [How to add a new set?](#set)
+ - [How to define a new technology in the sets?](#tech)
+ - [How to define a new country?](#country)
+ - [How to define a new parameter?](#parameter)
+ - [How to define a new variable or equation?](#var)
+2. [Add power plants?](#powerplants)
+3. [Add parameters into reporting/reporting.gms?](#reporting)
 
-## Define sets, parameters, variables and equations(#definitions)
+<a name="definitions"></a>
+
+## 1. Define sets, parameters, variables and equations
 
 In order to define sets, parameters, variables, and equations, the user needs to go to the file **definitions.gms**.
 
-1. How to add a new Set?(##11-set)
+<a name="set"></a>
+
+**1.1 How to add a new Set?**
 
 Sets are defined in the **Sets** section, as it is shown in the following code example:
 
@@ -59,8 +64,9 @@ Sets
 
 
 ```  
+<a name="tech"></a>
 
-1. How to define a new Gas and Battery technology in the sets (eg. Gas_CC and Battery)?
+**1.2 How to define a new Gas and Battery technology in the sets (eg. Gas_CC and Battery)?**
 
 To add new technologies there are a couple of places that the user has to follow the following steps:
   a. Add Gas_CC and Baterry in the section sets for reporting in order to get the results in the gdx and csv files. This step is very important as many of the sets defined in the model are subsets of the item_rep set.
@@ -89,7 +95,9 @@ To add new technologies there are a couple of places that the user has to follow
 
 ``` 
 
-2. How to define a new country (Turkey, defined as TR)?
+<a name="country"></a>
+
+**1.3  How to define a new country (Turkey, defined as TR)?**
 
 To add a new country in the model definitions, the user needs to follow the same two steps described previously.
   a. Add TR in the section sets for reporting in order to get the results in the gdx and csv files.
@@ -116,7 +124,9 @@ b. Then, the user needs to add TR in the respective country set (**n(item_rep)**
                                                              HU, IE, IT, LT, LV, NL, NO, PL, PT, RO, SE, SI, SK/
         noneu(n)           countries that not belong to EU  /GB, TR/
 ```
-3. How to define a new parameter?
+<a name="parameter"></a>
+
+**1.4 How to define a new parameter?**
 
 Model parameters are added in the parameters section. 
 ```
@@ -157,8 +167,10 @@ Parameters
         
 ;
 ```
+<a name="var"></a>
 
-4. How to define a new variable or equation?
+**1.5 How to define a new variable or equation?**
+
 Following the same logic as the previous examples, variables and equations are defined in the sections **Variables** and **Equations**. Following the Battery example, imagine the user would like to add a battery charge variable (BAT_CHARGE) and a capacity constraint. The changes can be seen in the following code:
 
 ```
@@ -189,8 +201,9 @@ Equations
 ;
 
 ```
+<a name="powerplants"></a>
 
-## Add power plants
+## 2. Add power plants
 
 To add power plants and their characteristics, the user needs to go to the file **input/capacity_blocks_2017.csv**, for example. Three more files similar to this one are included in the **input** folder.
 
@@ -209,7 +222,9 @@ Following the example of the battery, imagine the user wants to add a battery po
 - var_costs: 0
 - bat_roundtrip: 0.86
 
-## Add parameters into reporting/reporting.gms file
+<a name="reporting"></a>
+
+## 3. Add parameters into reporting/reporting.gms file
 
 To add new parameters to the final report.gdx file, the user needs to follow the following steps. As an example, imagine we need a report parameter that aggregate all the hourly results per year, called report_yearly. 
 
