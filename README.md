@@ -1,5 +1,5 @@
 # EuroMod
-EuroMod a techno-economic model of the integrated European market with price granuality.
+EuroMod is a techno-economic electricity market model covering the integrated European market, with a focus on generating more realistic wholesale prices.
 
 ## Table of Contents
 1. [About](#about)
@@ -12,9 +12,9 @@ EuroMod a techno-economic model of the integrated European market with price gra
 ## About
 EuroMod is a bottom-up model of the European interconnected power system, covering 27 countries: Austria, Belgium, Bulgaria, Czech Republic, Switzerland, Germany, Denmark, Estonia, Spain, Finland, France, Great Britain, Greece, Hungary, Ireland, Italy, Lithuania, Latvia, Netherlands, Norway, Poland, Portugal, Romania, Sweden, Slovenia, and Slovakia.
 
-It minimizes total system costs with respect to dispatch, storage and interconnectors. For each hour of the year, demand and supply of electricity is matched and a clearing price is determined. Individual generation and storage technologies are explicitly modeled. Demand fluctuates exogenously and it is perfectly price-inelastic. It features 6 generation and 3 hydro storage technologies. Technologies such wind, solar, run-of-river and other renewables are exogenously included in the model as time-series.
+It minimizes total system costs with respect to dispatch, storage and interconnectors. For each hour of the year, demand and supply of electricity is matched and a clearing price is determined. Individual generation and storage technologies are explicitly modelled. It features 6 generation and 3 hydro storage technologies. Technologies such wind, solar, run-of-river and other renewables are exogenously included in the model as time-series. Demand fluctuates exogenously and it is perfectly price-inelastic.
 
-The model is subject to a set of technical constraints related to demand and supply balance, combined heat and power, cycling of thermal plants, and operational constraints on hydro. Trading between bidding zones or countries is subject to net transfer capacity, and it takes place until arbitrage possibilities are exploited or capacity constraints become binding. Unit commitment and load flow are not modeled.
+The model is subject to a set of technical constraints related to demand and supply balance, combined heat and power, cycling of thermal plants, and operational constraints on hydro. Trading between bidding zones or countries is subject to net transfer capacity, and it takes place until arbitrage possibilities are exploited or capacity constraints become binding. Unit commitment of individual power stations and optimal load flow are not modelled.
 
 Markets are not assumed to be competitive by proposing two enhancements to the total system cost function: 
 
@@ -24,10 +24,10 @@ Markets are not assumed to be competitive by proposing two enhancements to the t
 
 The resulting market-clearing price resembles the equilibrium price on European wholesale electricity markets.
 
-EuroMod is written in GAMS and solved by CPLEX on a desktop computer in about 10 minutes.
+EuroMod is written in GAMS and solved using CPLEX. The dispatch across 27 countries for one year of 8,760 hours can be solved on a desktop computer in about 10 minutes.
 
 ## Quick Start
-EuroMod can run on Windows, macOS and Linux. Before installing EuroMod, you should proceed to the instalation of GAMS with a valid license. GAMS is available for download from the following website: https://www.gams.com
+EuroMod can run on Windows, macOS and Linux. Before installing EuroMod, you should install [GAMS](https://www.gams.com) with a valid license.
 
 After downloading GAMS and EuroMod, the model runs for the year 2017 by just running the file **run_model.gms**
 
@@ -122,6 +122,14 @@ Hourly results are saved into a CSV for the following categories
 
 ## What's new
 
-## Citing EuroMod
+## Credits and Contact
 
-## License
+Please contact [Carla Mendes](c.tavares-mendes@imperial.ac.uk) if you have questions or comments about `EuroMod`.
+
+#### Citing EuroMod
+If you use `EuroMod` or code derived from it in academic work, please cite:
+
+Carla Mendes, Iain Staffell, and Richard Green (2023). EuroMod: A Model of the European Power Market with Price Granularity.
+
+#### License
+BSD-3-Clause
