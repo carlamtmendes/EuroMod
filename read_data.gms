@@ -254,9 +254,6 @@ loop(tech,
                      plant_con(p,"%scenario%","%runyear%",n,tech,fuel,is_chp,'MW'))
 );
 
-*Parameter
-*max_cap(t,p)
-*;
 
 loop(tech,
        max_cap(t,p)$SUM((n,fuel,is_chp),
@@ -375,10 +372,6 @@ hydro_pumpcap(n,p)  = SUM((map_np(n,p), map_ptech(p,hydrotech)),cap_pump(n,hydro
 * Storage capacity
 hydro_storagecap(n,p) = SUM((map_np(n,p), map_ptech(p,hydrotech)),cap_stor(n,hydrotech));
 hydro_storagecap("LV",p) = 0 ;
-
-* Initial storage capacity
-*init_level_stor(n,"w53",hydrotech) = init_level_stor(n,"w52",hydrotech);
-*hydro_storagelvl_firsthour(t,n,p) = SUM(map_tweek(t,week), SUM(map_ptech(p,hydrotech),init_level_stor(n,week,hydrotech))) * hydro_storagecap(n,p) ;
 
 
 * Dam do not have pump facility

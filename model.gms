@@ -8,7 +8,7 @@ $setglobal t "t"
 *@@                              OBJECTIVE
 *-------------------------------------------------------------------------------
 *        Minimize total cost of conventional generation
-*note:   this equation does now also include balancing by conventional power plants
+*note:   this equation does not include balancing by conventional power plants
 *note2:  costs for curtailment are included
 *note3:  variable_cost_intercept includes bid spread
 
