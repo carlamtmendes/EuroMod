@@ -11,10 +11,9 @@ $if not set report_prefix       $setglobal      report_prefix "report"
 *-----------------------------------------------------------------------*
 *                               Scalars                                 *
 *-----------------------------------------------------------------------*
-
 Scalar
-        intercept       /-1.263562005732507/
-        slope           /6.40846985/
+        beta    coefficient of OLS regression on price errors        /0.098/
+        
 ;
 
 *-----------------------------------------------------------------------*
@@ -82,6 +81,14 @@ Sets
         map_tweek(t,week)                               mapping model hours to weeks
         map_ttime(t,time)                               mapping model hours to timesteps
         map_tquarter(t,quarter)                         mapping model hours to yearly quarters
+        
+
+****sets for quantile***************************************************
+        k                                               'Count used for quartiles'                  / 1*8760        /
+        ki                                              'Count used for countries'                  / 1*27        /
+        qtl                                             'Quantiles (set)'                           / q5, q10, q25, q50, q75, q90, q95 /
+        imap(ki,n)                                      'Mapping from ordered list to sector labels'
+
 
 ;
 
@@ -119,7 +126,8 @@ Parameters
         hydro_pumpcap(n,p)                              Storage capacity for pump
         hydro_storagelvl_firsthour(t,p)                 Min level of storage in the first hour of year
         hydro_storagelvl_lasthour(t,p)                  Min level of storage in the last hour of year
-        inflow(t,n,hydrotech)                           water inflows 
+        inflow(t,n,hydrotech)                           water inflows
+        
         fuel_price_eu(t,fuel,eu)                        fuel price per fuel and t for EU countries
         fuel_price_gb(t,fuel,noneu)                     fuel price per fuel and t for GB countries
 
@@ -149,7 +157,17 @@ Parameters
 * Others
         net_demand(t,n)                                 net-demand per hour and country
         net_demand_avg(n)                               net-demand average per country 
-        net_demand_std(n)                               net-demand standard deviation per country 
+        net_demand_std(n)                               net-demand standard deviation per country
+        qvalue_model_country(n,*)                       Quartile values model
+        mean_model_country(n)                           Mean impact on country n
+        meanrank_country(n)                             Mean rank of country n
+        mean_model(*)                                   Mean impact
+        meanrank                                        Mean rank
+        x_model(t)                                      Vector used for sorting
+        r_model(t)                                      Rank values returned
+        quartile_model(qtl)                             Quantiles (evaluated)
+        qv_model(qtl)                                   Quantiles (values)               / q50 50/
+        report_price_quantile_model_country(n,*)        Save Quartiles data
 
 ;
 
@@ -208,6 +226,7 @@ Equations
          LIM_Storlevel(t,p)                             maximum storage restriction
          DEF_Storlevel(t,p)                             storage balance
          LIM_Storlevel_lsthr(t,p)                       terminal constraint for storage
+         
 *        Network
          LIM_ntc(t,n,nn)                                ntc powerflow constraint
 

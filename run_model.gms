@@ -23,14 +23,16 @@ $if not set modelName                   $setglobal modelName                    
 $if not set scenario                    $setglobal scenario                     Historic
 
 $if not set scale                       $setglobal scale                        1000
-$if not set lostload_price              $setglobal lostload_price               10000
+$if not set lostload_price              $setglobal lostload_price               1000
 $if not set curtail_price               $setglobal curtail_price                65
 
 ** CHOOSE MODULES
 $if not set module_calibration          $setglobal module_calibration           yes
 $if not set module_chp                  $setglobal module_chp                   yes
 
-$if not set slope                       $setglobal slope                        0.47
+$if not set delta                       $setglobal delta                        0.52
+$if not set alpha                       $setglobal alpha                        0.74
+
 
 $if not set result_file_suffix          $setglobal result_file_suffix           %scenario%_t%t_end%
 

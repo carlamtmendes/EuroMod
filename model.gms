@@ -49,7 +49,7 @@ LIM_curtailment(t,n)$SUM(restech, infeed(t,restech,n))..
 
 LIM_lostload(t,n)..
          LostLoad(t,n)       =L=     d(t,n)
-;                        
+;                                        
 
 *-------------------------------------------------------------------------------
 *@@                       CONVENTIONAL GENERATION
@@ -105,6 +105,12 @@ DEF_Storlevel(t,p)$SUM((n,map_ptech(p,hydrotech)),hydro_storagecap(n,p))..
                                  
 ;
 
+LIM_Storlevel_lsthr(tlast,p)$hydro_storagelvl_lasthour(tlast,p)..
+            Storlevel(tlast,p)
+                        =G= hydro_storagelvl_lasthour(tlast,p)
+;
+
+
 *-------------------------------------------------------------------------------
 *@@                        ELECTRICITY GRID
 *-------------------------------------------------------------------------------
@@ -133,6 +139,8 @@ $if %module_chp%=="yes"           LIM_qchp
         LIM_PUMP
         LIM_Storlevel
         DEF_Storlevel
+        LIM_Storlevel_lsthr
+
         LIM_ntc
 
 /;

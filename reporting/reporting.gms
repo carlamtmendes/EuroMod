@@ -45,7 +45,39 @@ net_demand(t,n)         = d(t,n) - infeed(t,'Solar',n) - infeed(t,'WindOn',n) - 
 net_demand_avg(n)       = SUM(t,net_demand(t,n)) / 8760;
 net_demand_std(n)       = sqrt(SUM(t, sqr(net_demand(t,n)-net_demand_avg(n)))/(8760-1));
 
-report_nodal_price_hourly(t,n) = report_nodal_price_hourly(t,n) + slope * ((net_demand(t,n) - net_demand_avg(n))/net_demand_std(n)) + intercept;
+
+* QUANTILES
+
+* Quantiles prices per country
+
+* Evaluate means and support for results:
+qvalue_model_country(n,"mean") =  sum(t, report_nodal_price_hourly(t,n))/card(t);
+
+* Determine ranking of sectors by mean impact:
+mean_model_country(n) = qvalue_model_country(n,"mean");
+
+$libInclude rank mean_model_country n meanrank_country
+
+* The following statement creates a tuple matching the ordered
+* set, ki, to the set of country, n.  In this tuple, the sequence of
+* assignments corresponds to increasing mean impacts: 
+*imap(ki+(meanrank(n)-ord(ki)),n) = yes;
+
+* Evaluate quartiles of sectoral impacts for each country:
+loop(n,
+   x_model(t) = report_nodal_price_hourly(t,n);
+
+*  Load quartile with the perctiles to be
+*  evaluated (10th, 50th and 90th):
+   quartile_model(qtl) = qv_model(qtl);
+
+$  libInclude rank x_model t r_model quartile_model
+
+*  Save the quartile values:
+   qvalue_model_country(n,qtl) = quartile_model(qtl);
+);
+
+report_price_quantile_model_country(n,qtl)    = qvalue_model_country(n,qtl);
 
 
 results(t,n,item_rep) = report_hourly(t,n,item_rep);
@@ -54,7 +86,10 @@ results(t,n,'Curtailment') = - report_hourly(t,n,'Curtailment');
 results(t,n,"LostGeneration") = - report_hourly(t,n,"LostGeneration");
 results(t,n,"PumpDemand") = - report_hourly(t,n,"PumpDemand");
 results(t,n,'Supply') = SUM(dispatchtech,report_hourly(t,n, dispatchtech)) + SUM(hydrotech, report_hourly(t,n, hydrotech)) + SUM(restech, report_hourly(t,n, restech));
-results(t,n,'Price') = report_nodal_price_hourly(t,n);
+
+* EuroMod Prices with adjustment
+results(t,n,'Price') = report_nodal_price_hourly(t,n) + (((net_demand(t,n) - net_demand_avg(n))/ (net_demand_std(n))) * beta * SUM(qtl,report_price_quantile_model_country(n,qtl)));
+
 results(t,n,nn) = report_ntcflow(t,n,nn);
 
 *----------------------------------------------------------------------------------

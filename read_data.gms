@@ -26,7 +26,7 @@ $batInclude symRead Parameter windon              (time,n)                      
 $batInclude symRead Parameter windoff             (time,n)                                                 'wind offshore infeed'      wind_off.csv                                         1            2..lastCol
 $batInclude symRead Parameter otherRES            (time,n)                                                 'other res infeed'          other_res.csv                                        1            2..lastCol
 $batInclude symRead Parameter ror                 (time,n)                                                 'RoR infeed'                hydro_ror.csv                                        1            2..lastCol
-$batInclude symRead Parameter chp_demand          (n,year)                                                 'chp ENTSOE demand'         chp_demand.csv                                       2            3..lastCol
+$batInclude symRead Parameter chp_entsoe          (n,year)                                                 'chp ENTSOE demand'         chp_entsoe.csv                                       2            3..lastCol
 $batInclude symRead Parameter water_inflow        (n,week,*)                                               'water inflows'             inflows_weekly.csv                                   2..3         4..lastCol
 $batInclude symRead Parameter fuel_price_up       (time,year,*)                                            'fuel prices'               fuel_prices.csv                                      2,3          4..lastCol
 $batInclude symRead Parameter initial_storage     (n,year,week,*)                                          'initial storage levels'    initial_storage.csv                                  1..3         4..lastCol
@@ -35,7 +35,8 @@ $batInclude symRead Parameter initial_stor_ratio  (n,week,*)                    
 $batInclude symRead Parameter ntc                 (scen,year,l,n,nn)                                       'ntc'                       ntc_%runyear%.csv                                    1,2,4..6     7..lastCol
 $batInclude symRead Parameter plant_con           (p,scen,year,n,tech,fuel,is_chp,*)                       'plant upload data'         capacities_block_%runyear%.csv                       14,2,3,5..8  9..13
 $batInclude symRead Parameter chp_profile         (t)                                                      'chp hourly profile'        chp_profile.csv                                      2            3..lastCol
-$batInclude symRead Parameter avail               (n,tech,month)                                           'availabilities'            availabilities.csv                                   1,2          3..lastCol
+$batInclude symRead Parameter avail               (tech,month)                                             'availabilities'            availabilities.csv                                   2            3..lastCol
+$batInclude symRead Parameter avail_country       (year,n,tech,month)                                      'availabilities'            avail_country.csv                                    1..3         4..lastCol
 $batInclude symRead Parameter cap_stor            (n,tech)                                                 'storage hydro capacity'    capacities_storage_hydro.csv                         5,6          7
 $batInclude symRead Parameter cap_pump            (n,tech)                                                 'storage hydro capacity'    capacities_pump.csv                                  5,6          7
 
@@ -68,7 +69,6 @@ map_pchp(p) = SUM((scen,year,n,tech,fuel), map_plants(p,scen,year,n,tech,fuel,'Y
 *-------------------------------------------------------------------------------
 *@@                       INITIALIZE AND COUNT HOURS
 *-------------------------------------------------------------------------------
-
 
 tfirst(t) = no;
 tfirst(t)$(ord(t) = 1) = yes;
@@ -105,7 +105,7 @@ infeed(t,'WindOn',n)    =   SUM(map_ttime(t,time), windon(time,n));
 infeed(t,'WindOff',n)   =   SUM(map_ttime(t,time), windoff(time,n));
 infeed(t,'RoR',n)       =   SUM(map_ttime(t,time), ror(time,n));
 infeed(t,'Other',n)     =   SUM(map_ttime(t,time), otherRES(time,n))
-                           + ((hist_gen("%scenario%","%runyear%",n,"Other") * 1000 ) -  SUM(time, otherRES(time,n))) / 8760;
+                            + (((hist_gen("%scenario%","%runyear%",n,"Other") * 1000 ) -  SUM(time, otherRES(time,n))) / 8760);
 
 * replace neg values values from infeed with 0
 
@@ -174,9 +174,9 @@ ntc_loss(nn,n)    transmission losses
 
 ntc_line(n,nn) = YES$SUM(map_l_n_nn(l,n,nn),1);
 
-cap_ntc(t,n,nn) =   SUM(l, ntc("%scenario%","%runyear%",l,n,nn));
+cap_ntc(t,n,nn) = SUM(l, ntc("%scenario%","%runyear%",l,n,nn));
 
-ntc_loss(nn,n)$ntc_line(n,nn) = 0.001;
+ntc_loss(nn,n)$ntc_line(n,nn) = 0.02;
 
 *-------------------------------------------------------------------------------
 *@@                       AVAILABILITIES
@@ -185,8 +185,15 @@ ntc_loss(nn,n)$ntc_line(n,nn) = 0.001;
 
 availablity(n,tech,month) = 1;
 
-availablity(n,tech,month) = avail(n,tech,month);
-availablity(n,tech,month)$(availablity(n,tech,month) eq 0) = availablity('CH',tech,month);
+* Lig and Nuc are based per country. Others are based on general numbers
+availablity(n,tech,month) = SUM(year, avail_country(year,n,tech,month));
+availablity(n,tech,month)$(availablity(n,tech,month) eq 0) = SUM(year, avail_country(year,'CH',tech,month));
+
+* Availabilities from ENTSOE data - Iain
+availablity(n,'Gas',month) = avail('Gas',month);
+availablity(n,'Coal',month) = avail('Coal',month);
+availablity(n,'Oil',month) = avail('Oil',month);
+availablity(n,'Biomass',month) = avail('Biomass',month);
 
 * Availabilities for Hydro
 availablity(n,'PSOpen',month) = 1;
@@ -195,50 +202,111 @@ availablity(n,'Dam',month) = 1;
 
 availablity(n,tech,month)$(availablity(n,tech,month) gt 1) = 1;
 
-
-
 *-------------------------------------------------------------------------------
 *@@                       CALIBRATION
 *-------------------------------------------------------------------------------
 
 $IF NOT %module_calibration%=="yes" $goto end_calibration
-availablity('FI','Nuclear',month) = 1;
-availablity('GB','Nuclear',month) = availablity('GB','Nuclear',month) * 0.92;
-availablity('BG','Nuclear',month) = availablity('BG','Nuclear',month) * 1.30;
-availablity('RO','Nuclear',month) = availablity('BG','Nuclear',month) * 1.35;
-availablity('SK','Nuclear',month) = availablity('SK','Nuclear',month) * 1.08;
-availablity('CH','Nuclear',month) = availablity('CH','Nuclear',month) * 1.19;
 
-inflow(t,"IT",'Dam') = inflow(t,"IT",'Dam') * 0.5;
+**** NTC CAPACITIES
+cap_ntc(t,'AT','HU') = 1300;
 
-fuel_price_eu(t,'Lignite','DE') = fuel_price_eu(t,'Lignite','DE') * 0.75;
+$IF %runyear%==2018 cap_ntc(t,'BE','GB') = 0;
 
-cap_ntc(t,'DE','AT') = 2500;
-cap_ntc(t,'AT','DE') = 2500;
-cap_ntc(t,'DE','NL') = 2500;
-cap_ntc(t,'NL','DE') = 2500;
-cap_ntc(t,'DE','FR') = 1800;
-cap_ntc(t,'FR','DE') = 2300;
+cap_ntc(t,'CH','FR') = 2095;
+
+cap_ntc(t,'CZ','AT') = 2085;
+cap_ntc(t,'CZ','SK') = 2090;
+
+cap_ntc(t,'DE','CH') = 4320;
+cap_ntc(t,'DE','CZ') = 2235;
+
+cap_ntc(t,'FR','DE') = 3880;
+cap_ntc(t,'FR','ES') = 3350;
+
+cap_ntc(t,'NL','BE') = 2910;
+
+cap_ntc(t,'PL','CZ') = 1330;
+
+cap_ntc(t,'RO','BG') = 1000;
+
+cap_ntc(t,'SI','IT') = 1200;
+
+**** WATER INFLOWS
+inflow(t,"CH",'Dam') = inflow(t,"CH",'Dam') * 0.82;
+inflow(t,"ES",'Dam') = inflow(t,"ES",'Dam') * 1.51 * 1.04;
+inflow(t,"IT",'Dam') = inflow(t,"IT",'Dam') * 0.42;
+inflow(t,"NO",'PSOpen') = inflow(t,"NO",'PSOpen') * 0.98;
+inflow(t,"SE",'Dam') = inflow(t,"SE",'Dam') * 0.94;
+
+**** AVAILABILITIES
+
+availablity('BE','Nuclear',month) = availablity('BE','Nuclear',month) * 0.90;
+availablity('BG','Nuclear',month) = availablity('BG','Nuclear',month) * 1.70;
+availablity('CH','Nuclear',month) = availablity('CH','Nuclear',month) * 1.36;
+availablity('CZ','Nuclear',month) = availablity('CZ','Nuclear',month) * 1.12 * 0.96;
+availablity('ES','Nuclear',month) = availablity('ES','Nuclear',month) * 1.03 * 1.01;
+availablity('FI','Nuclear',month) = availablity('FI','Nuclear',month) * 1.61;
+availablity('FR','Nuclear',month) = availablity('FR','Nuclear',month) * 1.02 * 0.96;
+availablity('NL','Nuclear',month) = availablity('NL','Nuclear',month) * 0.93;
+availablity('RO','Nuclear',month) = 1;
+availablity('SK','Nuclear',month) = availablity('SK','Nuclear',month) * 1.10;
+
+availablity('BG','Lignite',month) = availablity('BG','Lignite',month) * 0.89;
+availablity('CZ','Lignite',month) = availablity('CZ','Lignite',month) * 1.03 * 1.04 * 0.97;
+availablity('DE','Lignite',month) = availablity('DE','Lignite',month) * 0.93 * 1.13 * 1.10;
+availablity('GR','Lignite',month) = availablity('GR','Lignite',month) * 0.62 * 0.93 * 0.93;
+availablity('RO','Lignite',month) = availablity('RO','Lignite',month) * 0.68;
+availablity('SK','Lignite',month) = availablity('SK','Lignite',month) * 0.91 * 1.06;
+
+availablity(n,tech,month)$(availablity(n,tech,month) gt 1) = 1;
+
+**** FUEL COSTS
+
+fuel_price_eu(t,'Gas','GR') = fuel_price_eu(t,'Gas','GR') * 1.30 * 1.20;
+fuel_price_eu(t,'Oil','GR') = fuel_price_eu(t,'Oil','GR') * 1.30;
+fuel_price_eu(t,'Coal','GR') = fuel_price_eu(t,'Coal','GR') * 1.30;
+fuel_price_eu(t,'Lignite','GR') = fuel_price_eu(t,'Lignite','GR') * 1.30;
+ 
+fuel_price_eu(t,'Gas','IT') = fuel_price_eu(t,'Gas','IT') * 1.30 * 1.20;
+fuel_price_eu(t,'Oil','IT') = fuel_price_eu(t,'Oil','IT') * 1.30;
+fuel_price_eu(t,'Coal','IT') = fuel_price_eu(t,'Coal','IT') * 1.30;
+fuel_price_eu(t,'Lignite','IT') = fuel_price_eu(t,'Lignite','IT') * 1.30;
+ 
+ 
+fuel_price_eu(t,'Gas','RO') = fuel_price_eu(t,'Gas','RO') * 1.20 * 1.20;
+fuel_price_eu(t,'Oil','RO') = fuel_price_eu(t,'Oil','RO') * 1.20;
+fuel_price_eu(t,'Coal','RO') = fuel_price_eu(t,'Coal','RO') * 1.20;
+fuel_price_eu(t,'Lignite','RO') = fuel_price_eu(t,'Lignite','RO') * 1.20;
+ 
+fuel_price_eu(t,'Gas','HU') = fuel_price_eu(t,'Gas','HU') * 1.20 * 1.20;
+fuel_price_eu(t,'Oil','HU') = fuel_price_eu(t,'Oil','HU') * 1.20;
+fuel_price_eu(t,'Coal','HU') = fuel_price_eu(t,'Coal','HU') * 1.20;
+fuel_price_eu(t,'Lignite','HU') = fuel_price_eu(t,'Lignite','HU') * 1.20;
+ 
+ 
+fuel_price_eu(t,'Gas','ES') = fuel_price_eu(t,'Gas','ES') * 1.10 * 1.20;
+fuel_price_eu(t,'Oil','ES') = fuel_price_eu(t,'Oil','ES') * 1.10;
+fuel_price_eu(t,'Coal','ES') = fuel_price_eu(t,'Coal','ES') * 1.10;
+fuel_price_eu(t,'Lignite','ES') = fuel_price_eu(t,'Lignite','ES') * 1.10;
+ 
+fuel_price_eu(t,'Gas','PT') = fuel_price_eu(t,'Gas','PT') * 1.10 * 1.20;
+fuel_price_eu(t,'Oil','PT') = fuel_price_eu(t,'Oil','PT') * 1.10;
+fuel_price_eu(t,'Coal','PT') = fuel_price_eu(t,'Coal','PT') * 1.10;
+fuel_price_eu(t,'Lignite','PT') = fuel_price_eu(t,'Lignite','PT') * 1.10;
+ 
+fuel_price_eu(t,'Gas','SI') = fuel_price_eu(t,'Gas','SI') * 1.10 * 1.20;
+fuel_price_eu(t,'Oil','SI') = fuel_price_eu(t,'Oil','SI') * 1.10;
+fuel_price_eu(t,'Coal','SI') = fuel_price_eu(t,'Coal','SI') * 1.10;
+fuel_price_eu(t,'Lignite','SI') = fuel_price_eu(t,'Lignite','SI') * 1.10;
+
+fuel_price_eu(t,'Gas','SK') = fuel_price_eu(t,'Gas','SK') * 1.10;
+fuel_price_eu(t,'Gas','BG') = fuel_price_eu(t,'Gas','BG') * 1.10;
+fuel_price_eu(t,'Gas','HR') = fuel_price_eu(t,'Gas','HR') * 1.10;
+
+fuel_price_eu(t,'Oil','EE') = fuel_price_eu(t,'Oil','EE') * 0.50 * 0.50 *1.30 * 0.80;
 
 $label end_calibration
-
-
-** CORRECT HYDRO IN CH
-Parameter
-hydro_ch_tot(tech,n)
-hydro_ch_share(t,tech,n)
-hydro_ch_bfedata(year)
-;
-
-$IF %runyear%=='2017'   hydro_ch_bfedata('2017') =   36327000;
-$IF %runyear%=='2018'   hydro_ch_bfedata('2018') =   36449000;
-$IF %runyear%=='2019'   hydro_ch_bfedata('2019') =   36567000;
-$IF %runyear%=='2020'   hydro_ch_bfedata('2020') =   36741000;
-
-hydro_ch_tot('RoR','CH') = SUM(t,infeed(t,'RoR','CH'));
-hydro_ch_share(t,'RoR','CH')$hydro_ch_tot('RoR','CH') = infeed(t,'RoR','CH')/hydro_ch_tot('RoR','CH');
-infeed(t,'RoR','CH') = hydro_ch_bfedata('%runyear%') * 0.487 * hydro_ch_share(t,'RoR','CH');
-
 
 *-------------------------------------------------------------------------------
 *@@                       CAPACITIES
@@ -264,15 +332,13 @@ loop(tech,
 
 q_max(t,p)$(q_max(t,p) gt max_cap(t,p))    =   max_cap(t,p);
 
-
-
 *-------------------------------------------------------------------------------
 *@@                       CHP
 *-------------------------------------------------------------------------------
 
 ** NOTE: Historic data from Eurostat.
 
-chp_energy_year(n,year) = chp_demand(n,year);
+chp_energy_year(n,year) = chp_entsoe(n,year);
 
 * calculate total capacity per country and technology that can provide CHP
 q_max_tot(p,n)  =   SUM((tech,fuel,is_chp)$map_pchp(p), plant_con(p,"%scenario%","%runyear%",n,tech,fuel,is_chp,'MW'));
@@ -307,7 +373,7 @@ chp(t,p) = SUM(n, chp_dem_country(t,n,p) * adjust_chp(n));
 *@@                      COST FUNCTION
 *-------------------------------------------------------------------------------
 
-* with EU fuel prices
+** with EU fuel prices
 loop(fuel,
       mc(t,p)$SUM((eu,tech,is_chp),
                             plant_con(p,"%scenario%","%runyear%",eu,tech,fuel,is_chp,'efficiency'))
@@ -344,22 +410,23 @@ loop(fuel,
 );
 
 
+
 *-------------------------------------------------------------------------------
 *@@                 VARIABLE COST INTERCEPT AND SLOPE SCALLING
 *-------------------------------------------------------------------------------
 
-$if %increasing_costs%=="yes"   variable_cost_intercept(t,p) = 8.268 + mc(t,p) + (-0.57 * %slope% * mc(t,p));
-
-$if %increasing_costs%=="yes"   variable_cost_intercept(t,p)$(%slope% eq 0) = 8.268 + mc(t,p) + (-0.57 * %slope% * mc(t,p));
+$if %increasing_costs%=="yes"   variable_cost_intercept(t,p) = mc(t,p) - (%alpha% * %delta% * mc(t,p));
 
 $if %increasing_costs%=="yes"   variable_cost_slope(t,p)$SUM((scen,year,n,dispatchtech,fuel,is_chp),
 $if %increasing_costs%=="yes"                            plant_con(p,scen,year,n,dispatchtech,fuel,is_chp,'MW'))
-$if %increasing_costs%=="yes"                                = (%slope% * mc(t,p)) / SUM((scen,year,n,dispatchtech,fuel,is_chp),plant_con(p,scen,year,n,dispatchtech,fuel,is_chp,'MW'));
+$if %increasing_costs%=="yes"                                = (%delta% * mc(t,p)) / SUM((scen,year,n,dispatchtech,fuel,is_chp),plant_con(p,scen,year,n,dispatchtech,fuel,is_chp,'MW'));
 
 $if %increasing_costs%=="yes"   variable_cost_slope(t,p)$(SUM(dispatchtech, map_ptech(p,dispatchtech) * variable_cost_slope(t,p)) eq 0) = 0.00001;
-$if %increasing_costs%=="yes"   variable_cost_slope(t,p)$(%slope% eq 0) = 0;
+$if %increasing_costs%=="yes"   variable_cost_slope(t,p)$(%delta% eq 0) = 0;
 
-$if %increasing_costs%=="no"   variable_cost_intercept(t,p) = 8.268 + mc(t,p);
+
+$if %increasing_costs%=="no"   variable_cost_intercept(t,p) = mc(t,p);
+
 
 *-------------------------------------------------------------------------------
 *@@                       HYDRO
@@ -417,8 +484,6 @@ inflow(t,"LV",hydrotech) = 0;
 inflow(t,'NO','Dam') = 0;
 inflow(t,'SK','Dam') = 0;
 inflow(t,'FI','Dam') = 0;
-
-
 
 *-------------------------------------------------------------------------------
 *@@                       WRITE GDX INPUT FILE
