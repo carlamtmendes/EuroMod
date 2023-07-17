@@ -99,6 +99,7 @@ EuroMod includes several modules that cover the input, optimization, and model's
   - **reporting.gms**: main file used to define all the parameters used to sumarize all main results.
 
 - **\results**: folder that stores all the GDX and CSV results files
+- Supplementary data regarding the results of the paper "EuroMod: Modelling European power markets with improved price granularity" can be found at https://zenodo.org/record/8156116. 
 
 Hourly results are saved into a CSV for the following categories
   - CO2 emissions
@@ -129,7 +130,7 @@ Please contact [Carla Mendes](c.tavares-mendes@imperial.ac.uk) if you have quest
 #### Citing EuroMod
 If you use `EuroMod` or code derived from it in academic work, please cite:
 
-Carla Mendes, Iain Staffell, and Richard Green (2023). EuroMod: A Model of the European Power Market with Price Granularity.
+Carla Mendes, Iain Staffell, and Richard Green (2023). EuroMod: Modelling European power markets with improved price granularity.
 
 #### License
 BSD-3-Clause
